@@ -22,8 +22,9 @@ public class MainConsole{
                         args[2].equals("1") ? true : false,
                         args[3].equals("1") ? true : false);
 
-      excellent.start();
-      excellent.join();
+      new Thread(excellent).start();
+      //excellent.join();
+      Thread.sleep(500000);
 
     } catch(Exception e) {
       Log.e(e);

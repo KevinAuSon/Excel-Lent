@@ -71,10 +71,11 @@ public final class Log {
 	}
 
 	public static final void i(Object t) {
-		if(DEBUG_MODE)
-			printMessage(t, type.INFO);
-		else
-			System.out.println(t + "\n");
+		// if(DEBUG_MODE)
+		// 	printMessage(t, type.INFO);
+		// else
+		// 	System.out.println(t + "\n");
+		;
 	}
 
 	public static final void w(Object t) {
@@ -97,12 +98,8 @@ public final class Log {
 	public static final void e(Exception e) {
 		if(DEBUG_MODE)
 		{
-			if(e.getMessage() == null)
-				printMessage(new String(), type.ERROR);
-			else
-				printMessage(e.getMessage(), type.ERROR);
-
 			e.printStackTrace();
+			System.exit(1);
 		}
 		else
 		{

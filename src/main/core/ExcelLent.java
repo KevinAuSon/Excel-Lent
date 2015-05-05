@@ -16,7 +16,7 @@ import util.Log;
 import excel.Excel_settings;
 import java.util.concurrent.TimeUnit;
 
-public class ExcelLent extends Thread {
+public class ExcelLent implements Runnable {
     private static GenomeManager virusesManager;
     private static GenomeManager eukaryotesManager;
     private static GenomeManager prokaryotesManager;
@@ -41,7 +41,7 @@ public class ExcelLent extends Thread {
 	@Override
 	public void run() {
 		ThreadPoolExecutor es = (ThreadPoolExecutor) Executors
-				.newFixedThreadPool(1);
+				.newFixedThreadPool(20);
 
 	    File project_root = new File(System.getProperty("user.dir"));
 
@@ -61,18 +61,21 @@ public class ExcelLent extends Thread {
         JSONObject urls = getUrls(urls_path);
 
         try{
+          System.out.println("-------------");
           if(toDo[0]) {
             Log.i("Checking viruses");
             virusesManager = new GenomeManager(new File(tree_root, "Viruses"),
                                     new URL(urls.get("Viruses").toString()), fine);
             virusesManager.AddSpeciesThreads(es, listener);
           }
+          System.out.println("-------------");
           if(toDo[1]) {
             Log.i("Checking eukaryotes");
             eukaryotesManager = new GenomeManager(new File(tree_root, "Eukaryotes"),
                                     new URL(urls.get("Eukaryotes").toString()), fine);
             eukaryotesManager.AddSpeciesThreads(es, listener);
           }
+          System.out.println("-------------");
           if(toDo[2]) {
             Log.i("Checking prokaryote");
             prokaryotesManager = new GenomeManager(new File(tree_root, "Prokaryote"),
@@ -80,9 +83,12 @@ public class ExcelLent extends Thread {
             prokaryotesManager.AddSpeciesThreads(es, listener);
           }
 
-      while (es.getTaskCount() != es.getCompletedTaskCount())
-        Thread.sleep(5000);
+      System.out.println("-------------");
 
+      while (es.getTaskCount() != es.getCompletedTaskCount()) {
+        Thread.sleep(5000);
+        System.out.println("-");
+      }
       es.shutdown();
       es.awaitTermination(60, TimeUnit.SECONDS);
       Excel_settings.agregate_excels();
